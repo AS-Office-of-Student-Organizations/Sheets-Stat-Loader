@@ -8,6 +8,7 @@ import {
     countUniqueOrgs,
     countTotalAllocated,
     getTodaysEvents,
+    getAttendanceLeaderboard,
 } from "./utils/stats.js";
 
 const firebaseService = await getFirebaseService();
@@ -21,10 +22,7 @@ console.log(countUniqueEvents(eventsTable))
 console.log(countUniqueOrgs(eventsTable))
 console.log(countTotalAllocated(eventsTable))
 console.log(getTodaysEvents(eventsTable))
-
-
-console.log((await getEventsTable(sheetsService)).length)
-console.log((await getAttendanceTable(sheetsService)).length)
+console.log(getAttendanceLeaderboard(attendanceTable))
 
 const test = '$200.00'
 console.log(parseFloat(test.replace(/[$,]/g, '')))

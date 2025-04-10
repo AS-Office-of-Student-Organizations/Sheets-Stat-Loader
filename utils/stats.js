@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { google } from "googleapis";
 dotenv.config();
 
+const TOP_K_EVENTS = 5; // Number of top events to return
+
 function countUniqueEmails(attendanceData) {
     const uniqueEmails = new Set();
     attendanceData.forEach((row) => {
@@ -13,9 +15,33 @@ function countUniqueEmails(attendanceData) {
     return uniqueEmails.size;
 }
 
-/*function getAttendanceLeaderboard(eventData, attendanceData) {
+function getAttendanceLeaderboard(attendanceData) {
+    const eventAttendanceMap = new Map();
+    attendanceData.forEach((row) => {
+        const eventName = row[2];
+        const email = row[1];
+        if (eventName && email) {
+            if (!eventAttendanceMap.has(eventName)) {
+                eventAttendanceMap.set(eventName, new Set());
+            }
+            eventAttendanceMap.get(eventName).add(email);
+        }
+    });
 
-}*/
+    const leaderboard = Array.from(eventAttendanceMap.entries()).map(([event, attendees]) => {
+        return { event, attendance: attendees.size };
+    });
+
+    leaderboard.sort((a, b) => b.attendance - a.attendance);
+
+    const top_events = leaderboard.slice(0, TOP_K_EVENTS)
+    top_events.forEach((event) => {
+        const parts = event.event.split(" - ");
+        event.event = parts[parts.length-1];
+        event.org = parts.slice(0, -1).join(" - ");
+    });
+    return top_events; 
+}
 
 function countUniqueEvents(eventData) {
     const uniqueEvents = new Set();
@@ -65,5 +91,5 @@ export {
     countUniqueOrgs,
     countTotalAllocated,
     getTodaysEvents,
-    // getAttendanceLeaderboard,
+    getAttendanceLeaderboard,
 }
