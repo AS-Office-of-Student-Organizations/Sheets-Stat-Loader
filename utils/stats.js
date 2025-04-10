@@ -15,6 +15,10 @@ function countUniqueEmails(attendanceData) {
     return uniqueEmails.size;
 }
 
+function countEmails(attendanceData) {
+    return attendanceData.length;
+}
+
 function getAttendanceLeaderboard(attendanceData) {
     const eventAttendanceMap = new Map();
     attendanceData.forEach((row) => {
@@ -78,15 +82,23 @@ function countTotalAllocated(eventData) {
 
 function getTodaysEvents(eventData) {
     const today = new Date();
-    const todaysEvents = eventData.filter((row) => {
+    const todaysEventRows = eventData.filter((row) => {
         const eventDate = new Date(row[3]);
         return eventDate.toDateString() === today.toDateString();
+    });
+    const todaysEvents = todaysEventRows.map((row) => {
+        const event = row[1];
+        const org = row[2];
+        const date = new Date(row[3]);
+        const venue = row[4];
+        return { event, org, date, venue };
     });
     return todaysEvents;
 }
 
 export {
     countUniqueEmails,
+    countEmails,
     countUniqueEvents,
     countUniqueOrgs,
     countTotalAllocated,
