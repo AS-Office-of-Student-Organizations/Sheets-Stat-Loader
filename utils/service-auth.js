@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { google } from "googleapis";
+import admin from "firebase-admin";
 
 dotenv.config();
 
@@ -21,4 +22,15 @@ async function getSheetsService() {
     return googleSheetsService;
 }
 
-export { getSheetsService };
+async function getFirebaseService() {
+  const firebaseServiceAcc = base64ToJson(process.env.FIREBASE_CREDENTIALS_BASE64);
+
+  admin.initializeApp({
+      credential: admin.credential.cert(firebaseServiceAcc),
+  });
+
+  return admin;
+}
+
+
+export { getSheetsService, getFirebaseService };
