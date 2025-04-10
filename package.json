@@ -1,0 +1,19 @@
+{
+  "name": "sheets-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "API to query google sheets related to office of student organizations activities",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "firebase-admin": "^13.2.0",
+    "googleapis": "^148.0.0",
+    "sheets-api": "file:"
+  }
+}
