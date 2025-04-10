@@ -5,11 +5,42 @@ dotenv.config();
 
 async function getEventsTable(googleSheetsService) {
     const masterSheetId = process.env.MASTER_SHEET_ID;
-    const res = await googleSheetsService.spreadsheets.values.get({
+    const fallTable = await googleSheetsService.spreadsheets.values.get({
         spreadsheetId: masterSheetId,
-        range: "All Events Fall!A:C",
+        range: "All Events Fall!A:F",
     })
-    console.log(res.data.values[0])
+    const winterTable = await googleSheetsService.spreadsheets.values.get({
+        spreadsheetId: masterSheetId,
+        range: "All Events Winter!A:F",
+    })
+    const springTable = await googleSheetsService.spreadsheets.values.get({
+        spreadsheetId: masterSheetId,
+        range: "All Events Spring!A:F",
+    })
+
+    const fallValues = fallTable.data.values || [];
+    const winterValues = winterTable.data.values || [];
+    const springValues = springTable.data.values || [];
+
+    const headerRow = fallValues.length > 0 ? fallValues[0] : [];
+
+    const combinedTable = [
+        ...fallValues,
+        ...(winterValues.length > 0 ? winterValues.slice(1) : []),
+        ...(springValues.length > 0 ? springValues.slice(1) : [])
+    ];
+    
+    return combinedTable;
 }
 
-export { getEventsTable };
+async function getAttendanceTable(googleSheetsService) {
+    const attendanceSheetId = process.env.ATTENDANCE_SHEET_ID;
+    const attendanceTable = await googleSheetsService.spreadsheets.values.get({
+        spreadsheetId: attendanceSheetId,
+        range: "Form Responses 1!A:F",
+    });
+
+    return attendanceTable.data.values || [];
+}
+
+export { getEventsTable, getAttendanceTable };
