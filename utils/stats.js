@@ -50,7 +50,7 @@ function getAttendanceLeaderboard(attendanceData) {
 function countUniqueEvents(eventData) {
     const uniqueEvents = new Set();
     eventData.forEach((row) => {
-        if (row[0]) {
+        if (row[0] && row[3] && !isNaN(new Date(row[3]).getTime()) && new Date(row[3]) <= new Date()) {
             uniqueEvents.add(row[0]);
         }
     });
@@ -60,7 +60,7 @@ function countUniqueEvents(eventData) {
 function countUniqueOrgs(eventData) {
     const uniqueOrgs = new Set();
     eventData.forEach((row) => {
-        if (row[1]) {
+        if (row[1] && row[3] && !isNaN(new Date(row[3]).getTime()) && new Date(row[3]) <= new Date()) {
             uniqueOrgs.add(row[1]);
         }
     });
@@ -70,7 +70,7 @@ function countUniqueOrgs(eventData) {
 function countTotalAllocated(eventData) {
     let totalAllocated = 0;
     eventData.forEach((row) => {
-        if (row[5]) {
+        if (row[5] && row[3] && !isNaN(new Date(row[3]).getTime()) && new Date(row[3]) <= new Date()) {
             const value = parseFloat(row[5].replace(/[$,]/g, ''));
             if (!isNaN(value)) {
                 totalAllocated += value;
@@ -87,8 +87,8 @@ function getTodaysEvents(eventData) {
         return eventDate.toDateString() === today.toDateString();
     });
     const todaysEvents = todaysEventRows.map((row) => {
-        const event = row[1];
-        const org = row[2];
+        const event = row[2];
+        const org = row[1];
         const date = new Date(row[3]);
         const venue = row[4];
         return { event, org, date, venue };
