@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { google } from "googleapis";
 dotenv.config();
 
-const TOP_K_EVENTS = 5; // Number of top events to return
+const TOP_K_EVENTS = 5; // leaderboard size, can config
 
 function countUniqueEmails(attendanceData) {
     const uniqueEmails = new Set();
@@ -81,11 +81,17 @@ function countTotalAllocated(eventData) {
 }
 
 function getTodaysEvents(eventData) {
-    const today = new Date();
+    const now = new Date();
+    const pstOptions = { timeZone: 'America/Los_Angeles' };
+    const todayPST = new Date(now.toLocaleString('en-US', pstOptions));
+    const todayPSTString = todayPST.toDateString();
+    
     const todaysEventRows = eventData.filter((row) => {
         const eventDate = new Date(row[3]);
-        return eventDate.toDateString() === today.toDateString();
+        const eventDatePST = new Date(eventDate.toLocaleString('en-US', pstOptions));
+        return eventDatePST.toDateString() === todayPSTString;
     });
+    
     const todaysEvents = todaysEventRows.map((row) => {
         const event = row[2];
         const org = row[1];
