@@ -88,8 +88,7 @@ function getTodaysEvents(eventData) {
     
     const todaysEventRows = eventData.filter((row) => {
         const eventDate = new Date(row[3]);
-        const eventDatePST = new Date(eventDate.toLocaleString('en-US', pstOptions));
-        return eventDatePST.toDateString() === todayPSTString;
+        return eventDate.toDateString() === todayPSTString;
     });
     
     const todaysEvents = todaysEventRows.map((row) => {
