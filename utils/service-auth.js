@@ -1,8 +1,40 @@
 import dotenv from "dotenv";
 import { google } from "googleapis";
 import admin from "firebase-admin";
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
 dotenv.config();
+
+const secretsClient = new SecretsManagerClient({
+  region: process.env.AWS_REGION || "us-east-1",
+});
+
+async function getSecret(secretName) {
+  try {
+    const command = new GetSecretValueCommand({
+      SecretId: secretName,
+    });
+    const response = await secretsClient.send(command);
+    return response.SecretString;
+  } catch (error) {
+    console.log(`Error retrieving secret ${secretName}: ${error.message}`);
+    return null;
+  }
+}
+
+async function getCredentials(secretName, envVarName) {
+  const secretValue = await getSecret(secretName);
+  
+  if (secretValue) {
+    return base64ToJson(secretValue);
+  }
+  
+  if (process.env[envVarName]) {
+    return base64ToJson(process.env[envVarName]);
+  }
+  
+  throw new Error(`Could not find credentials in AWS Secrets Manager or environment variables (${envVarName})`);
+}
 
 function base64ToJson(base64String) {
   const jsonString = Buffer.from(base64String, "base64").toString("utf-8");
@@ -10,7 +42,10 @@ function base64ToJson(base64String) {
 }
 
 async function getSheetsService() {
-    const googleSheetsServiceAcc = base64ToJson(process.env.GOOGLE_SHEETS_CREDENTIALS_BASE64);
+  const googleSheetsServiceAcc = await getCredentials(
+    "GOOGLE_SHEETS_CREDENTIALS_BASE64", 
+    "GOOGLE_SHEETS_CREDENTIALS_BASE64"
+  );
 
     const googleSheetsAuth = new google.auth.GoogleAuth({
     credentials: googleSheetsServiceAcc,
@@ -23,7 +58,10 @@ async function getSheetsService() {
 }
 
 async function getFirebaseService() {
-  const firebaseServiceAcc = base64ToJson(process.env.FIREBASE_CREDENTIALS_BASE64);
+  const firebaseServiceAcc = await getCredentials(
+    "FIREBASE_CREDENTIALS_BASE64", 
+    "FIREBASE_CREDENTIALS_BASE64"
+  );
 
   admin.initializeApp({
       credential: admin.credential.cert(firebaseServiceAcc),
