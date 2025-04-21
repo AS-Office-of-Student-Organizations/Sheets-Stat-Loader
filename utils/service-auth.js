@@ -43,7 +43,7 @@ function base64ToJson(base64String) {
 
 async function getSheetsService() {
   const googleSheetsServiceAcc = await getCredentials(
-    "GOOGLE_SHEETS_CREDENTIALS_BASE64", 
+    "AS-Funding-ChatBot-And-Google-Sheets", 
     "GOOGLE_SHEETS_CREDENTIALS_BASE64"
   );
 
@@ -59,7 +59,7 @@ async function getSheetsService() {
 
 async function getFirebaseService() {
   const firebaseServiceAcc = await getCredentials(
-    "FIREBASE_CREDENTIALS_BASE64", 
+    "AS-Funding-ChatBot-And-Google-Sheets", 
     "FIREBASE_CREDENTIALS_BASE64"
   );
 
