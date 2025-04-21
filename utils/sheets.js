@@ -3,8 +3,11 @@ import dotenv from "dotenv";
 import { google } from "googleapis";
 dotenv.config();
 
+const MASTER_SHEET_ID = "1qS_G69hPhD53jJol67pyvbn1EpAKplAOP-IcTBVmrWk"
+const ATTENDANCE_SHEET_ID = "14T6TJV8dOUn4G7_Lhkz6PuBgvwk1NuTpdJH9SnyjsFw"
+
 async function getEventsTable(googleSheetsService) {
-    const masterSheetId = process.env.MASTER_SHEET_ID;
+    const masterSheetId = MASTER_SHEET_ID;
     const fallTable = await googleSheetsService.spreadsheets.values.get({
         spreadsheetId: masterSheetId,
         range: "All Events Fall!A:F",
@@ -34,7 +37,7 @@ async function getEventsTable(googleSheetsService) {
 }
 
 async function getAttendanceTable(googleSheetsService) {
-    const attendanceSheetId = process.env.ATTENDANCE_SHEET_ID;
+    const attendanceSheetId = ATTENDANCE_SHEET_ID;
     const attendanceTable = await googleSheetsService.spreadsheets.values.get({
         spreadsheetId: attendanceSheetId,
         range: "Form Responses 1!A:F",
