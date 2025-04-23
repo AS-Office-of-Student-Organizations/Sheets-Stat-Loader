@@ -32,12 +32,7 @@ const db = firebaseService.firestore();
 const statsRef = db.collection("public").doc("stats-2024-2025");
 
 // log for sanity
-console.log(countUniqueEmails(attendanceTable))
-console.log(countUniqueEvents(eventsTable))
-console.log(countUniqueOrgs(eventsTable))
-console.log(countTotalAllocated(eventsTable))
-console.log(getTodaysEvents(eventsTable))
-console.log(getAttendanceLeaderboard(attendanceTable))
+console.log("Successfully loaded events and stats");
 
 // set in firebase
 await statsRef.set({
