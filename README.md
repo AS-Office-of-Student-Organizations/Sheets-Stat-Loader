@@ -1,7 +1,8 @@
 # Google Sheets Stat Loader
 
-To run:
+This is intended to be run as a daily cronjob to populate the AS funding website's daily fields.
 
+To run:
 
 You first need to have the npm package, and run: `npm install`
 
