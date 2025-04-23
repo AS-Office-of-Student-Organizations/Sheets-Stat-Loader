@@ -24,16 +24,19 @@ async function getSecret(secretName) {
 
 async function getCredentials(secretName, envVarName) {
   const secretValue = await getSecret(secretName);
-  
+
   if (secretValue) {
-    return base64ToJson(secretValue);
+    const secretsJson = JSON.parse(secretValue);
+    if (secretsJson[envVarName]) {
+      return base64ToJson(secretsJson[envVarName]);
+    }
   }
-  
+
   if (process.env[envVarName]) {
     return base64ToJson(process.env[envVarName]);
   }
-  
-  throw new Error(`Could not find credentials in AWS Secrets Manager or environment variables (${envVarName})`);
+
+  throw new Error(`Could not find credentials for ${envVarName} in AWS Secrets Manager or environment variables.`);
 }
 
 function base64ToJson(base64String) {
